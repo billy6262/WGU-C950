@@ -4,30 +4,32 @@ class HashTable:
         self.table = [[] for x in range(size)]
 
     def insert(self, key, item):
+        key = str(key)
         hash_value = hash(key) % self.size  #hashing the key value
         bucket = self.table[hash_value]     #calling the bucket of the hashed key
+        if len(bucket) == 0:   #if bucket is empty, append the key and item
+            bucket.append(key) #if not, append the item to the bucket
+            bucket.append(item)
+            return
         i = 0
         while i < len(bucket):     #linear probing for collisions
             if bucket[i] == key:   #checking the key matches
-                bucket[i + 1] = item #if key matches, update the item
-                i = 1              #asing the index to a value to indicate successful update
+                bucket.insert(i + 1,item) #if key matches, update the item
                 return
             i += 2
-        if  i != 1: #checking if update succeeded
-            bucket.append(key) #if not, append the item to the bucket
-            bucket.append(item)
 
     def retrieve(self, key):
-        hash_value = hash(key) % self.size
+        key = str(key)
+        hash_value = hash(key) % self.size 
         bucket = self.table[hash_value]
         i = 0
         while i < len(bucket):
-            print(key + " and " + i)
             if bucket[i] == key:
                 return bucket[i + 1]
-            i += 2
+            i += 1
     
     def delete(self, key):
+        key = str(key)
         hash_value = hash(key) % self.size
         bucket = self.table[hash_value]
         i = 0
