@@ -10,8 +10,8 @@ class Package:
         self.status = "at hub"
         self.deliveryTime = None
         self.notes = notes
-
     
 
     def __str__(self):
         return f"Package ID: {self.ID}, Address: {self.address}, City: {self.city}, State: {self.state}, Zip: {self.zip}, Delivery Deadline: {self.deliveryDeadLine}, Weight: {self.weight}, Status: {self.status}"
+    
