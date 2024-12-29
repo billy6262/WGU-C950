@@ -1,18 +1,20 @@
 import csv
+import datetime
 from Package import Package
 from HashTable import HashTable
 from Edge import Edge
 from Truck import Truck
 from Address import Address
 
+#thses sections import the data from the CSV files
 with open('PackageFile.csv', 'r') as csvPackageFile:
     reader = csv.reader(csvPackageFile)
     i = 0  # Counter to skip header rows
-    while i < 8:  
+    while i < 5:  
         i += 1 
         next(reader)  # Skip header rows
 
-    packageHashTable = HashTable(100)  # Create a hash table with a size of 1000 to store the package information
+    packageHashTable = HashTable(1000)  # Create a hash table with a size of 1000 to store the package information
     for line in reader:
         package = Package(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7])
         packageHashTable.insert(package.ID, package)
@@ -25,7 +27,7 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
         i += 1
         next(reader)  # Skip header rows
     AddressKey = next(reader) #first column is at index 2 on row 6
-    distanceHashTable = HashTable(1000)  # Create a hash table with a size of 1000 to store the distance
+    distanceHashTable = HashTable(1)  # Create a hash table with a size of 1000 to store the distance
     for line in reader:
         RowAddress = line[1]
         i = 2
@@ -39,21 +41,17 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
     csvDistanceFile.close()
 
 
-truck1 = Truck(18, [20,21,16,34,19,13,39,14,15], 0, AddressKey[2],0)
-truck2 = Truck(18, [3,5,17,19,36,37,28], 0, AddressKey[2],0)
-truck3 = Truck(18, [6,9,8,25,26,28,32], 0, AddressKey[2],0)
-
-together = [20,21,16,34,19,13,39,14,15] # 6 aadresses
-#rush [7,29,1,8,30,31,4,40,5,37] 5 addresses
-#delayed on flight and rushed [28,6,32,25,26]
-#truck2 [18,36,3,38,9]  id 9 is delayed address
-#all other [27,35,2,33,11,17,12,24,23,10,22]
-
+together = [20,21,16,34,19,13,39,14,15,35,2,33,17,12,11,23] # 6 aadresses
+rush = [7,29,1,8,30,31,4,40,5,37] # 5 addresses
+delayed = [28,6,32,25,26]
+truck2p = [18,36,3,38,9,27]
+other = [24,10,22]
+test = [1,2,3,4,5,6]
 
 def calculate_route(packages):
     #this section retives the addresses and associated edges for the packages
 
-    addressHashTable = HashTable(25) #this table will store the address just for this route  
+    addressHashTable = HashTable(1000) #this table will store the address just for this route  
     addressHashTable.insert(AddressKey[2],Address(AddressKey[2])) #inserting the address of the depot where all routes start
     addresses = [AddressKey[2]]             #a address list is needed to be able to iterate over it
     routEdges = []                          #edges between all addresses will be stored in this list enabeling it to be sorted by length.
@@ -71,7 +69,6 @@ def calculate_route(packages):
     routEdges = list(set(routEdges)) # removing duplicates
     routEdges.sort(key=lambda e: e.ilength)  #sorting the edges from shortest to longest
     
-
     #this section makes a minimum spanning tree
     
     for edge in routEdges:
@@ -84,7 +81,8 @@ def calculate_route(packages):
         elif addTo.address not in subAddresses:  #by checking the address agains all addresses ion the tree it will be conected to we can varifiy if it will form a loop.
             addFrom.add_edge(edge)
             addTo.add_edge(edge)
-    
+
+
 
     #this section turns the tree into a eulerian path
 
@@ -102,7 +100,7 @@ def calculate_route(packages):
     oddDegreeRoutEdges = list(set(oddDegreeRoutEdges)) # removing duplicates
     oddDegreeRoutEdges.sort(key=lambda e: e.ilength)  #sorting the edges from shortest to longest
     for edge in oddDegreeRoutEdges:
-        if addressHashTable.retrieve(edge.address1).address in oddDegreeAddresses and addressHashTable.retrieve(edge.address2).address in oddDegreeAddresses:
+        if edge.address1 in oddDegreeAddresses and edge.address2 in oddDegreeAddresses:
             addFrom = addressHashTable.retrieve(edge.address1)
             addTo = addressHashTable.retrieve(edge.address2)
             addFrom.add_edge(edge)
@@ -111,19 +109,32 @@ def calculate_route(packages):
             oddDegreeAddresses.remove(addTo.address)
 
 
+    print(len(addresses))
     #this section will take each edge and if it is to a address already visited replace it with a edge from the current address to the next unvisited address.
-
+    odometer = 0.0
     visitedAddresses = []
-    for address in addressHashTable.retrieve(AddressKey[2]).traverse(addressHashTable):
-        if address not in visitedAddresses:
+    addresstree = addressHashTable.retrieve(AddressKey[2]).traverse(addressHashTable)
+    for address in addresses:
+        print(addressHashTable.retrieve(address).degree())
+    print(len(addresstree))
+    
+    for address in addresstree:
+        if address == AddressKey[2]:
+            lastAddress = address
             visitedAddresses.append(address)
-            print(address)
-
-
-
+            print(lastAddress)
+        elif address not in visitedAddresses:
+            odometer = odometer + float(distanceHashTable.retrieve_distances(lastAddress, address).length)
+            print(distanceHashTable.retrieve_distances(lastAddress, address).length)
+            lastAddress = address
+            visitedAddresses.append(address)
+            print(lastAddress)
 
     
+    visitedAddresses.append(AddressKey[2])
+    print(odometer)
+    return visitedAddresses
+ 
+truck1 = Truck("Truck 1",18, rush, 0, AddressKey[2],packageHashTable,calculate_route(rush))
 
-
-calculate_route(together)
-
+print(truck1.drive_route(distanceHashTable))
