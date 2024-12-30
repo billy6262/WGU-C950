@@ -16,7 +16,7 @@ class Package:
     
 
     def __str__(self):
-        return f'Package ID: {self.ID} Address: {self.address} City: {self.city} State: {self.state} Zip: {self.zip} Delivery Status:{self.status[len(self.status)-1][0]} Delivery Time: {self.status[len(self.status) - 1][1]}'
+        return f'Package ID: {self.ID} Address: {self.address} City: {self.city} State: {self.state} Zip: {self.zip} Delivery Status:{self.status[len(self.status)-1][0]} Time: {self.status[len(self.status) - 1][1]}'
     
 
     def status_update(self, time, status):

@@ -5,33 +5,8 @@ class Address:
         self.edges = []
 
     def __str__(self):
-        return f"Address: {self.address}"
+        return f"Address: {self.address} degree {len(self.edges)}"
     
-    def traverse(self,addressHashTable, caller = None):       #traverse returns a list of all addresses in this tree in the order they would be travered in a hamiltonian circuit
-        returnAddreses = []
-        returnAddreses.append(self.address)
-
-        for edge in self.edges:                #if this function is called recursivly then the edge conecting it to the caller address will be removed to prevent the function from back tracking.
-            if edge.address1 == caller or edge.address2 == caller:
-                self.edges.remove(edge)                 
-                break                                 
-
-
-        if len(self.edges) > 0:       #check to see if this address has any edges
-            if self.edges[0].address1 == self.address:  #checking the correct dirtection to traverse on the edge.
-                addressOut = str(self.edges[0].address2 + "")
-            else:
-                addressOut = str(self.edges[0].address1 + "")  #checking the correct dirtection to traverse on the edge.
-            self.edges.pop(0) #removing the edge about to be traversed 
-
-
-
-            for edge in addressHashTable.retrieve(addressOut).traverse(addressHashTable,self.address):               #traversing the first edge in the address object to the adjacent address and recursivly calling traverse
-                returnAddreses.append(edge)              #appending the edges traversed in the recursive calls to the list to be returned.
-            
-
-        return returnAddreses  
-
 
     def degree(self):
         return len(self.edges)

@@ -14,9 +14,11 @@ class Truck:
         for packageid in packages:
             self.packageTable.append(packageHashTable.retrieve(packageid))
 
-    def new_route_and_packages(self, route, packages):
+    def new_route_and_packages(self, route, packages,packageHashTable):
         self.route = route
         self.packages = packages
+        for packageid in packages:
+            self.packageTable.append(packageHashTable.retrieve(packageid))
 
     def drive_route(self, distanceHashTable):
         
@@ -34,6 +36,11 @@ class Truck:
                 for package in self.packageTable:
                     if package.address == self.currentAdress:
                         package.status_update(self.currentTime,f"Delivered by {self.name}.")
+        edge = distanceHashTable.retrieve_distances(self.currentAdress,"4001 South 700 East")
+        self.currentAdress = "4001 South 700 East"
+        self.mileage = self.mileage + float(edge.length)
+        self.currentTime += datetime.timedelta(hours=float(edge.length)/float(self.speed))
+
         return self.mileage
 
 
