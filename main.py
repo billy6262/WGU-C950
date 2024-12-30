@@ -86,7 +86,7 @@ def calculate_route(packages):
 
 
 
-    #this section turns the tree into a eulerian path
+    #this section turns the tree into a eulerian path 
 
     oddDegreeAddresses = []
     oddDegreeRoutEdges = []
@@ -112,7 +112,7 @@ def calculate_route(packages):
 
 
 
-    def traverse_addreses(thisaddress,  caller = None): #traverse returns a list of all addresses in this tree in the order they would be traversed in a hamiltonian circuit
+    def traverse_addreses(thisaddress,  caller = None): #traverse returns a list of all addresses in this tree in the order they would be traversed in a eularian circuit
         returnAddreses = []            
         returnAddreses.append(thisaddress.address)
         if caller == None:                                                  #if you dont remove an edge from the address you start at you could cause a deadlock.

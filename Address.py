@@ -18,7 +18,7 @@ class Address:
         return self.edges
     
     def get_sub_addresses(self, addressHashTable ,root = None):
-        tempThisEdges = []
+        tempThisEdges = []                                                  
         for edge in self.edges:
             tempThisEdges.append(edge)
         returnAddresses = []
