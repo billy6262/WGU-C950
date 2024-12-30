@@ -41,11 +41,6 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
     csvDistanceFile.close()
 
 
-together = [20,21,16,34,19,13,39,14,15,2,33,17,11,23,22] 
-rush = [7,29,1,8,30,31,4,40,5,37] 
-delayed = [28,6,32,25,26,27,35,10,24]
-truck2p = [18,36,3,38,9,27]
-
 
 def calculate_route(packages):
     #this section retrieves the addresses and associated edges for the packages
@@ -140,7 +135,7 @@ def calculate_route(packages):
                 addressOut = str(thisaddress.edges[0].address2 + "")
             else:
                 addressOut = str(thisaddress.edges[0].address1 + "")  #checking the correct direction to traverse on the edge.
-            print(thisaddress.edges[0])
+
             thisaddress.edges.pop(0) #removing the edge about to be traversed 
 
 
@@ -152,8 +147,6 @@ def calculate_route(packages):
 
 
 
-    #for edge in addressHashTable.retrieve(addresses[]).edges:
-
     finalRoute = []
     x = traverse_addreses(addressHashTable.retrieve(AddressKey[2]))
 
@@ -161,29 +154,36 @@ def calculate_route(packages):
         if address not in finalRoute:
             finalRoute.append(address)   #removing any backtracking turning it from a eularian cycle to a hamiltonian path
 
-    for address in addresses:
-        print(address)
-
-    print(len(addresses))
-    print(len(finalRoute))
     return finalRoute
  
 
+ # package loads for each truck.composition is based on delivery window and requierments.
+together = [20,21,16,34,19,13,39,14,15,2,33,17,11,23,22] 
+rush = [7,29,1,8,30,31,4,40,5,37] 
+delayed = [28,6,32,25,26,27,35,10,24]
+truck2p = [18,36,3,38,9,27]
+
+
 #load truck 1 with the "rush" packages and dispatch the truck.
 truck1 = Truck("Truck 1",18, rush, 0, AddressKey[2],packageHashTable,calculate_route(rush))
-print(truck1.drive_route(distanceHashTable))
+truck1.drive_route(distanceHashTable)
 
 #load truck 2 with the "together" packages and dispatch the truck.
 truck2 = Truck("Truck 2",18, together, 0, AddressKey[2],packageHashTable,calculate_route(together))
-print(truck2.drive_route(distanceHashTable))
+truck2.drive_route(distanceHashTable)
 
 #load truck 1 with the "delayed" packages and dispatch the truck.
 truck1.new_route_and_packages(calculate_route(delayed),delayed,packageHashTable)
-print(truck1.drive_route(distanceHashTable))
+truck1.drive_route(distanceHashTable)
 
 #load truck 2 with the "truck2p" packages and dispatch the truck.
 truck2.new_route_and_packages(calculate_route(truck2p),truck2p,packageHashTable)
-print(truck2.drive_route(distanceHashTable))
+truck2.drive_route(distanceHashTable)
+
+i=1
+while i <= 40:
+    print(packageHashTable.retrieve(i))
+    i += 1
 
 
 
