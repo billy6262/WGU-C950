@@ -17,27 +17,24 @@ class Address:
     def get_edges(self):
         return self.edges
     
-    def get_sub_addresses(self, addressHashTable ,root = None):
-        tempThisEdges = []                                                  
-        for edge in self.edges:
-            tempThisEdges.append(edge)
+    def get_sub_addresses(self, addressHashTable ,root = None): #this function returns all addreses attached to this address
+        tempThisEdges = list(self.edges)
         returnAddresses = []
-        if root:
+        if root:        #removing the edge this function was called from
             for edge in tempThisEdges:
                 if edge.address1 == root or edge.address2 == root:
                     tempThisEdges.remove(edge)
                     break
-        if len(tempThisEdges) == 0:
-            return [self.address]
 
-        returnAddresses.append(self.address)
+        returnAddresses.append(self.address) #adding this address to the return list
+
         for edge in tempThisEdges:
             if edge.address1 != self.address:
-                subAddress = addressHashTable.retrieve(edge.address1)
+                subAddress = addressHashTable.retrieve(edge.address1) #recursivly calleing this function to retive sub addresses
             elif edge.address2 != self.address:
                 subAddress = addressHashTable.retrieve(edge.address2)
 
-            for address in subAddress.get_sub_addresses(addressHashTable, self.address):
-                returnAddresses.append(address)
+            returnAddresses.extend(subAddress.get_sub_addresses(addressHashTable, self.address)) #adding the addreses from recursiv calls to the return
+                
         return returnAddresses
             
