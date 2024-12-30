@@ -17,7 +17,7 @@ class HashTable:
                 bucket.insert(i + 1,item) #if key matches, update the item
                 return True
             i += 1
-        else: #if bucket has content but not the item match to the key, append
+        if i == len(bucket): #if bucket has content but not the item match to the key, append
             bucket.append(skey)
             bucket.append(item)
             return True
@@ -39,13 +39,15 @@ class HashTable:
         Rhash_value = hash(Rkey) % self.size 
         bucket = self.table[hash_value]
         Rbucket = self.table[Rhash_value]
+
+
         i = 0
-        while i < len(bucket):
+        while i < len(bucket):  #probing for the key
             if bucket[i] == key:
                 return bucket[i + 1]
             i += 1
         i = 0
-        while i < len(Rbucket):
+        while i < len(Rbucket): #probing for the reversed key
             if Rbucket[i] == Rkey:
                 return Rbucket[i + 1]
             i += 1

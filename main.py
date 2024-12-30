@@ -47,11 +47,6 @@ delayed = [28,6,32,25,26,27,35,10,24]
 truck2p = [18,36,3,38,9,27]
 
 
-#together = [20,21,16,34,19,13,39,14,15] # 6 addresses
-#rush [7,29,1,8,30,31,4,40,5,37] 5 addresses
-#delayed on flight and rushed [28,6,32,25,26]
-#truck2 [18,36,3,38,9]  id 9 is delayed address
-#all other [27,,12,24,10,22]
 def calculate_route(packages):
     #this section retrieves the addresses and associated edges for the packages
 
@@ -120,13 +115,13 @@ def calculate_route(packages):
     def traverse_addreses(thisaddress,  caller = None): #traverse returns a list of all addresses in this tree in the order they would be traversed in a hamiltonian circuit
         returnAddreses = []            
         returnAddreses.append(thisaddress.address)
-        if caller == None:
-            if thisaddress.edges[0].address1 == thisaddress.address:
+        if caller == None:                                                  #if you dont remove an edge from the address you start at you could cause a deadlock.
+            if thisaddress.edges[0].address1 == thisaddress.address:          
                 addressOut = str(thisaddress.edges[0].address2 + "")
             else:
                 addressOut = str(thisaddress.edges[0].address1 + "")
             
-            addressHashTable.retrieve(addressOut).edges.remove(distanceHashTable.retrieve_distances(addressOut, thisaddress.address))
+            addressHashTable.retrieve(addressOut).edges.remove(distanceHashTable.retrieve_distances(addressOut, thisaddress.address)) #removing the coresponding edge in the other address
             thisaddress.edges.pop(0)
 
 
@@ -145,16 +140,19 @@ def calculate_route(packages):
                 addressOut = str(thisaddress.edges[0].address2 + "")
             else:
                 addressOut = str(thisaddress.edges[0].address1 + "")  #checking the correct direction to traverse on the edge.
+            print(thisaddress.edges[0])
             thisaddress.edges.pop(0) #removing the edge about to be traversed 
 
 
 
-            for address in traverse_addreses(addressHashTable.retrieve(addressOut),thisaddress.address):               #traversing the first edge in the address object to the adjacent address and recursively calling traverse
+            for address in traverse_addreses(addressHashTable.retrieve(addressOut),thisaddress.address): #traversing the first edge in the address object to the adjacent address and recursively calling traverse
                 returnAddreses.append(address)              #appending the edges traversed in the recursive calls to the list to be returned.
 
         return returnAddreses  
 
 
+
+    #for edge in addressHashTable.retrieve(addresses[]).edges:
 
     finalRoute = []
     x = traverse_addreses(addressHashTable.retrieve(AddressKey[2]))
@@ -163,23 +161,30 @@ def calculate_route(packages):
         if address not in finalRoute:
             finalRoute.append(address)   #removing any backtracking turning it from a eularian cycle to a hamiltonian path
 
+    for address in addresses:
+        print(address)
 
     print(len(addresses))
     print(len(finalRoute))
     return finalRoute
  
+
+#load truck 1 with the "rush" packages and dispatch the truck.
 truck1 = Truck("Truck 1",18, rush, 0, AddressKey[2],packageHashTable,calculate_route(rush))
 print(truck1.drive_route(distanceHashTable))
-print(truck1.currentTime)
+
+#load truck 2 with the "together" packages and dispatch the truck.
 truck2 = Truck("Truck 2",18, together, 0, AddressKey[2],packageHashTable,calculate_route(together))
 print(truck2.drive_route(distanceHashTable))
-print(truck2.currentTime)
+
+#load truck 1 with the "delayed" packages and dispatch the truck.
 truck1.new_route_and_packages(calculate_route(delayed),delayed,packageHashTable)
 print(truck1.drive_route(distanceHashTable))
-print(truck1.currentTime)
+
+#load truck 2 with the "truck2p" packages and dispatch the truck.
 truck2.new_route_and_packages(calculate_route(truck2p),truck2p,packageHashTable)
 print(truck2.drive_route(distanceHashTable))
-print(truck2.currentTime)
+
 
 
 
