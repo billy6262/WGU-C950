@@ -33,14 +33,14 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
         i += 1
         next(reader)  # Skip header rows
     AddressKey = next(reader) #first column is at index 2 on row 6
-    distanceHashTable = HashTable(1000)  # Create a hash table with a size of 1000 to store the distance
+    distanceHashTable = HashTable(100000)  # Create a hash table with a size of 1000 to store the distance
     for line in reader:
         RowAddress = line[1]
         i = 2
         while i < len(line):
             if line[i] != ''  and line[i] != '0':
                 edge = Edge( RowAddress, AddressKey[i], line[i])
-                distanceHashTable.insert(f"{RowAddress}{AddressKey[i]}", edge) #hashing distance table based off of the 2 relevant addresses
+                distanceHashTable.insert(f"{AddressKey[i]}{RowAddress}", edge) #hashing distance table based off of the 2 relevant addresses
             else:
                 i = 500 # setting an exit condition for the while loop
             i += 1
