@@ -17,24 +17,19 @@ class Address:
     def get_edges(self):
         return self.edges
     
-    def get_sub_addresses(self, addressHashTable ,root = None): #this function returns all addreses attached to this address
-        tempThisEdges = list(self.edges)
-        returnAddresses = []
-        if root:        #removing the edge this function was called from
-            for edge in tempThisEdges:
-                if edge.address1 == root or edge.address2 == root:
-                    tempThisEdges.remove(edge)
-                    break
+    def get_branch(self,addresshashtable, visited=[]): #this function retives all the addreses linked to this address.
 
-        returnAddresses.append(self.address) #adding this address to the return list
+        visitedAddresses = visited
+        visitedAddresses.append(self.address) #adding current address to the list of visited addreses
 
-        for edge in tempThisEdges:
-            if edge.address1 != self.address:
-                subAddress = addressHashTable.retrieve(edge.address1) #recursivly calleing this function to retive sub addresses
-            elif edge.address2 != self.address:
-                subAddress = addressHashTable.retrieve(edge.address2)
-
-            returnAddresses.extend(subAddress.get_sub_addresses(addressHashTable, self.address)) #adding the addreses from recursiv calls to the return
+        for edge in self.edges:  #if this edge leads to a address not in the list of visited addreses then  recusivly call this function.
+            if edge.address1 not in visitedAddresses:
+                visitedAddresses = addresshashtable.retrieve(edge.address1).get_branch(addresshashtable, visitedAddresses) #the recursive call is passed a list of visited addreses so it dosnt re visit an address.
+                #the value returned by the recursive call includes the list passed it when it was called. by reasigning visitedAddreses to the return you prevent duplicate addresses from being added.
                 
-        return returnAddresses
-            
+            elif edge.address2 not in visitedAddresses:
+                visitedAddresses = addresshashtable.retrieve(edge.address2).get_branch(addresshashtable, visitedAddresses)
+                
+
+
+        return visitedAddresses

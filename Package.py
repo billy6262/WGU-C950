@@ -10,13 +10,13 @@ class Package:
         self.zip = zip
         self.deliveryDeadLine = deliveryDeadLine
         self.weight = weight
-        self.status = [["At hub", datetime.time(8)]]
+        self.status = [["At hub", datetime.timedelta(hours=8)]]
         self.deliveryTime = None
         self.notes = notes
     
 
     def __str__(self):
-        return f'Package ID: {self.ID} Address: {self.address} City: {self.city} State: {self.state} Zip: {self.zip} Delivery Status:{self.status[len(self.status)-1][0]} Time: {self.status[len(self.status) - 1][1]}'
+        return f'Package ID: {self.ID} Address: {self.address} Delivery Deadline: {self.deliveryDeadLine} City: {self.city} Zip: {self.zip} Weight: {self.weight} Delivery Status:{self.status[len(self.status)-1][0]} Time: {self.status[len(self.status) - 1][1]}'
     
 
     def status_update(self, time, status):
@@ -24,3 +24,10 @@ class Package:
 
     def get_status(self):
         return f'ID: {self.ID}   Address: {self.address}   {self.status[len(self.status)-1][0]} {self.status[len(self.status)-1][1]}'
+    
+    def get_status_by_time(self, time):
+        Rlist = []
+        for status in self.status:
+            if status[1] < time:
+                Rlist.append(status)
+        return f'ID: {self.ID}   Address: {self.address}   {Rlist[len(Rlist)-1][0]} {Rlist[len(Rlist)-1][1]}'

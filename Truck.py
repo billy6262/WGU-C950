@@ -2,12 +2,12 @@ import datetime
 
 
 class Truck:
-    def __init__(self,name ,speed,packages, mileage, currentAdress, packageHashTable, route = None):
+    def __init__(self,name ,speed,packages, mileage, currentAdress, packageHashTable, route,departTime = datetime.timedelta(hours=8)):
         self.name = name
         self.speed = speed
         self.mileage = mileage
         self.currentAdress = currentAdress
-        self.currentTime = datetime.timedelta(hours=8)
+        self.currentTime = departTime
         self.route = route
         self.packageTable = []
 
@@ -26,10 +26,10 @@ class Truck:
             package.status_update(self.currentTime,f"Enroute on {self.name}.") #update the status of the package to be enroute
 
         for address in self.route:
-            if address == "4001 South 700 East":        #seting the start location
+            if address == "4001 South 700 East":        #setting the start location
                 self.currentAdress = address
             else:
-                edge = distanceHashTable.retrieve_distances(self.currentAdress, address)
+                edge = distanceHashTable.retrieve_distances(self.currentAdress, address)  #retiving the distance from current address to next address.
                 self.currentAdress = address
                 self.mileage = self.mileage + float(edge.length)
                 self.currentTime += datetime.timedelta(hours=float(edge.length)/float(self.speed))
