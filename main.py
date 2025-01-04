@@ -33,7 +33,7 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
         i += 1
         next(reader)  # Skip header rows
     AddressKey = next(reader) #first column is at index 2 on row 6
-    distanceHashTable = HashTable(100000)  # Create a hash table with a size of 1000 to store the distance
+    distanceHashTable = HashTable(2000)  # Create a hash table with a size of 1000 to store the distance
     for line in reader:
         RowAddress = line[1]
         i = 2
@@ -175,7 +175,7 @@ def calculate_route(packages):
 # package loads for each truck.composition is based on delivery window and requierments.
 rush = [7,29,1,8,30,4,40,5,37,17,2,33] 
 together = [20,21,16,34,19,13,39,14,15,11,23,18,36,3,38] 
-delayed = [28,6,32,31,25,26,27,35,10,24,27,9,22,12]
+delayed = [28,6,32,31,25,26,27,35,10,24,27,22,12,9]
 
 truck1 = Truck("Truck 1 trip 1",18, rush, 0, AddressKey[2],packageHashTable,calculate_route(rush))
 truck1.drive_route(distanceHashTable)
@@ -235,7 +235,7 @@ while True: #input loop. only way to exit is to enter E.
         while i <= 40: #itterating over the package ids
             package = packageHashTable.retrieve(i) #reteriving the package object
             if package.status[1][1] < datetime.timedelta(hours=8,minutes=35) and package.status[2][1] >  datetime.timedelta(hours=8,minutes=35):
-                print(f"ID: {package.ID}  Address: {package.address}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]}")
+                print(f"ID: {package.ID}  Address: {package.get_address(datetime.timedelta(hours=8,minutes=35))}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]} Delivery Deadline: {package.deliveryDeadLine}")
             i += 1
         print()
         print("En route report for 09:35 a.m.:")
@@ -243,7 +243,7 @@ while True: #input loop. only way to exit is to enter E.
         while i <= 40: #itterating over the package ids
             package = packageHashTable.retrieve(i) #reteriving the package object
             if package.status[1][1] < datetime.timedelta(hours=9,minutes=35) and package.status[2][1] >  datetime.timedelta(hours=9,minutes=35):
-                print(f"ID: {package.ID}  Address: {package.address}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]}")
+                print(f"ID: {package.ID}  Address: {package.get_address(datetime.timedelta(hours=9,minutes=35))}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]} Delivery Deadline: {package.deliveryDeadLine}")
             i += 1
         print()
         print("En route report for 12:03 a.m.:")
@@ -251,7 +251,7 @@ while True: #input loop. only way to exit is to enter E.
         while i <= 40: #itterating over the package ids
             package = packageHashTable.retrieve(i) #reteriving the package object
             if package.status[1][1] < datetime.timedelta(hours=12,minutes=3) and package.status[2][1] >  datetime.timedelta(hours=12,minutes=3): 
-                print(f"ID: {package.ID}  Address: {package.address}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]}")
+                print(f"ID: {package.ID}  Address: {package.get_address(datetime.timedelta(hours=12,minutes=3))}  Package Status: {package.status[1][0]}  last updated at: {package.status[1][1]} Delivery Deadline: {package.deliveryDeadLine}")
             i += 1
 
 

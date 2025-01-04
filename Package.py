@@ -23,11 +23,18 @@ class Package:
         self.status.append([status, time])
 
     def get_status(self):
-        return f'ID: {self.ID}   Address: {self.address}   {self.status[len(self.status)-1][0]} {self.status[len(self.status)-1][1]}'
+        return f'ID: {self.ID}   Address: {self.address}   {self.status[len(self.status)-1][0]} {self.status[len(self.status)-1][1]}  Delivery Deadline: {self.deliveryDeadLine}'
     
     def get_status_by_time(self, time):
         Rlist = []
         for status in self.status:
             if status[1] < time:
                 Rlist.append(status)
-        return f'ID: {self.ID}   Address: {self.address}   {Rlist[len(Rlist)-1][0]} {Rlist[len(Rlist)-1][1]}'
+        return f'ID: {self.ID}   Address: {self.get_address(time)}   {Rlist[len(Rlist)-1][0]} {Rlist[len(Rlist)-1][1]}  Delivery Deadline: {self.deliveryDeadLine}'
+    
+    def get_address(self, time):
+        if self.ID == '9' and time < datetime.timedelta(hours=10, minutes=20):
+            return "Unknown Address"
+        
+        else:
+            return self.address

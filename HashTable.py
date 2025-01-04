@@ -5,7 +5,7 @@ class HashTable:
 
     def insert(self, key, item):
         skey = str(key)
-        hash_value = hash(skey) % self.size  #hashing the key value
+        hash_value = hash(skey) % self.size -1  #hashing the key value
         bucket = self.table[hash_value]     #calling the bucket of the hashed key
         if len(bucket) == 0:   #if bucket is empty, append the key and item
             bucket.append(skey) #if not, append the item to the bucket
@@ -24,7 +24,7 @@ class HashTable:
 
     def retrieve(self, key):
         skey = str(key)
-        hash_value = hash(skey) % self.size 
+        hash_value = hash(skey) % self.size -1
         bucket = self.table[hash_value]
         i = 0
         while i < len(bucket): #linear probing
@@ -35,8 +35,8 @@ class HashTable:
     def retrieve_distances(self, adress1, adress2): #distance key are the hashed addresses. this function returns the same distance regardless of the order the addresses are inserted. 
         key = f"{adress1}{adress2}"
         Rkey = f"{adress2}{adress1}"
-        hash_value = hash(key) % self.size 
-        Rhash_value = hash(Rkey) % self.size 
+        hash_value = hash(key) % self.size -1
+        Rhash_value = hash(Rkey) % self.size -1
         bucket = self.table[hash_value]
         Rbucket = self.table[Rhash_value]
 
@@ -54,7 +54,7 @@ class HashTable:
     
     def delete(self, key):
         skey = str(key)
-        hash_value = hash(skey) % self.size
+        hash_value = hash(skey) % self.size -1
         bucket = self.table[hash_value]
         i = 0
         while i < len(bucket):
@@ -66,5 +66,5 @@ class HashTable:
         
     def getBucket(self, key):
         skey = str(key)
-        hash_value = hash(skey) % self.size
+        hash_value = hash(skey) % self.size -1
         return self.table[hash_value]
