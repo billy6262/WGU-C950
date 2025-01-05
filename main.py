@@ -33,7 +33,7 @@ with open('DistanceFile.csv', 'r') as csvDistanceFile:
         i += 1
         next(reader)  # Skip header rows
     AddressKey = next(reader) #first column is at index 2 on row 6
-    distanceHashTable = HashTable(2000)  # Create a hash table with a size of 1000 to store the distance
+    distanceHashTable = HashTable(1000)  # Create a hash table with a size of 1000 to store the distance
     for line in reader:
         RowAddress = line[1]
         i = 2
@@ -66,7 +66,11 @@ def calculate_route(packages):
             edge = distanceHashTable.retrieve_distances(addressP,addressS)
             if edge:                    #if the distance is found, it is added to the routEdges table
                 routEdges.append(edge)  #adding distances for just this rout to a new list
-    routEdges = list(set(routEdges)) # removing duplicates
+    routEdgest = [] #temp table 
+    for edge in routEdges: # removing duplicates
+        if edge not in routEdgest:
+            routEdgest.append(edge)
+    routEdges = routEdgest 
     routEdges.sort(key=lambda e: e.ilength)  #sorting the edges from shortest to longest
     
 

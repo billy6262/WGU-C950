@@ -17,10 +17,10 @@ class HashTable:
                 bucket.insert(i + 1,item) #if key matches, update the item
                 return True
             i += 1
-        if i == len(bucket): #if bucket has content but not the item match to the key, append
-            bucket.append(skey)
-            bucket.append(item)
-            return True
+         #if bucket has content but not the item match to the key, append
+        bucket.append(skey)
+        bucket.append(item)
+        return True
 
     def retrieve(self, key):
         skey = str(key)
