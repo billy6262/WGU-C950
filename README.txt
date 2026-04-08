@@ -1,8 +1,8 @@
-this project was orginaly desiged as part of the course work for my alogorths class at WGU, to solve a version of the traveling salesman problem.
+This project was originally designed as part of the course work for my algorithms class at WGU, to solve a version of the traveling salesman problem.
 
-it has a number of restrictions imposed by the project that would not normally be present in a typical traveling sales man problem but the methodligy and algorthm remain the same.
+It has a number of restrictions imposed by the project that would not normally be present in a typical traveling salesman problem but the methodology and algorithm remain the same.
 
 The algorithm is an implementation of a Christofides–Serdyukov algorithm.
-it uses several recursive functions to build the route. 
+It uses several recursive functions to build the route. 
 
-adtionaly a custom hash table was desiged to store the legths of each edge from node to node.
+additionally a custom hash table was designed to store the lengths of each edge from node to node.
